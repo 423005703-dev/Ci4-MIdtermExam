@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Controllers\Api;
+// app/Controllers/StudentController.php
 
-use CodeIgniter\RESTful\ResourceController;
+namespace App\Controllers;
 
-class StudentsController extends ResourceController
+use App\Models\UserModel;
+
+/**
+ * StudentController
+ *
+ * Handles pages visible to the 'student' role only.
+ * Protected by: auth|student  (via Routes.php)
+ */
+class StudentController extends BaseController
 {
-    public function index()
+    public function dashboard()
     {
-        // TODO: fetch all students
-        return $this->respond([
-            ['id' => 1, 'name' => 'Juan'],
-            ['id' => 2, 'name' => 'Maria']
-        ]);
-    }
+        $userId = session('user')['id'];
 
-    public function show($id = null)
-    {
-        // TODO: fetch single student by ID
-        return $this->respond([
-            'id' => $id,
-            'name' => 'Sample Student'
-        ]);
+        // Load full profile so dashboard can display student details
+        $user = (new UserModel())->getStudentById($userId);
+
+        return view('student/dashboard', ['user' => $user]);
     }
 }
